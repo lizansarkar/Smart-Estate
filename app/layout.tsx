@@ -19,8 +19,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Smart Estate - Find Your Dream Property",
-  description: "AI-powered real estate platform to find, buy, and sell properties in Bangladesh. Discover apartments, houses, villas, and commercial properties with smart recommendations.",
-  keywords: "real estate, property, apartment, house, villa, commercial, Bangladesh, AI, smart estate",
+  description:
+    "AI-powered real estate platform to find, buy, and sell properties in Bangladesh. Discover apartments, houses, villas, and commercial properties with smart recommendations.",
+  keywords:
+    "real estate, property, apartment, house, villa, commercial, Bangladesh, AI, smart estate",
 };
 
 export default function RootLayout({
@@ -34,7 +36,7 @@ export default function RootLayout({
       className={`${playfairDisplay.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-inter">
+      <body className="min-h-full bg-background text-foreground font-inter w-full">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -48,8 +50,8 @@ export default function RootLayout({
               toastOptions={{
                 duration: 4000,
                 style: {
-                  background: '#363636',
-                  color: '#fff',
+                  background: "#363636",
+                  color: "#fff",
                 },
               }}
             />
