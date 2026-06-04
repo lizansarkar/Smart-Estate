@@ -30,6 +30,7 @@ import {
   DollarSign,
   CheckCircle,
   XCircle,
+  Compass,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -202,12 +203,21 @@ const PropertyDetailPage: React.FC = () => {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Property Image */}
-            <div className="mb-6">
+            <div className="mb-6 relative group overflow-hidden rounded-lg shadow-lg">
               <img
                 src={property.image}
                 alt={property.title}
-                className="w-full h-96 object-cover rounded-lg shadow-lg"
+                className="w-full h-96 object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-4 left-4">
+                <Button asChild size="sm" className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold shadow-lg border border-cyan-300/30 rounded-xl cursor-pointer">
+                  <Link href={`/properties/${property._id}/tour`}>
+                    <Compass className="h-4 w-4 mr-2 animate-spin-slow text-slate-950" />
+                    360° Virtual Tour
+                  </Link>
+                </Button>
+              </div>
             </div>
 
             {/* Property Info */}
@@ -312,6 +322,12 @@ const PropertyDetailPage: React.FC = () => {
               <div className="bg-card rounded-lg border p-6 mb-6">
                 <h3 className="text-lg font-semibold mb-4">Interested in this property?</h3>
                 <div className="space-y-3 mb-4">
+                  <Button asChild variant="gradient" className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 border border-cyan-400/20 text-white shadow-md font-bold cursor-pointer" size="lg">
+                    <Link href={`/properties/${property._id}/tour`}>
+                      <Compass className="h-4 w-4 mr-2 animate-spin-slow" />
+                      360° Virtual Tour
+                    </Link>
+                  </Button>
                   <Button
                     className="w-full"
                     size="lg"
