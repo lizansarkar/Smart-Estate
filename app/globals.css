@@ -17,8 +17,8 @@
   --muted-foreground: #64748b;
   --card: #ffffff;
   --card-foreground: #0f172a;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
+  --border: transparent;
+  --input: transparent;
   --ring: #0f172a;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
@@ -128,3 +128,20 @@ a {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
+
+/* ===== 360 PANORAMA BACKGROUND ANIMATION ===== */
+@keyframes pan-360 {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: -3000px;
+  }
+}
+
+.animate-pan-360 {
+  animation: pan-360 90s linear infinite;
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+}
+

@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
                 {item.hasDropdown ? (
                   <button
                     onClick={togglePropertyDropdown}
-                    className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                    className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-foreground hover:text-primary transition-colors cursor-pointer"
                   >
                     <item.icon className="h-4 w-4" />
                     <span>{item.name}</span>
@@ -166,7 +166,7 @@ const Navbar: React.FC = () => {
               <div className="relative">
                 <button
                   onClick={toggleProfileDropdown}
-                  className="flex items-center space-x-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  className="flex items-center space-x-2 text-sm font-medium text-foreground hover:text-primary transition-colors cursor-pointer"
                 >
                   <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-medium">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
@@ -206,7 +206,7 @@ const Navbar: React.FC = () => {
                         logout();
                         setIsProfileDropdownOpen(false);
                       }}
-                      className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                      className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
                     >
                       <LogOut className="h-4 w-4" />
                       <span>Logout</span>
