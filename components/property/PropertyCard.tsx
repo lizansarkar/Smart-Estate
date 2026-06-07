@@ -33,7 +33,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   };
 
   return (
-    <div className="h-[380px] w-full rounded-2xl shadow-md bg-background border overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <div className="h-[380px] w-full rounded-2xl shadow-md bg-background overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Image */}
       <div className="relative h-48 w-full">
         <Image

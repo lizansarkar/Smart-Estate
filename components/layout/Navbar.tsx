@@ -219,14 +219,14 @@ const Navbar: React.FC = () => {
                 <Button
                   variant="outline"
                   asChild
-                  className="min-w-[100px] justify-center"
+                  className="min-w-[100px] justify-center rounded-md"
                 >
                   <Link href="/login">Login</Link>
                 </Button>
                 <Button
                   variant="secondary"
                   asChild
-                  className="min-w-[110px] justify-center"
+                  className="min-w-[110px] justify-center rounded-md"
                 >
                   <Link href="/register">Sign Up</Link>
                 </Button>

@@ -206,16 +206,6 @@ export default function Home() {
         {/* Subtle gradient overlay to blend edges and make the search box pop */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
-        {/* 360 Badge */}
-        <div className="absolute top-6 left-6 z-20 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4.5 py-1.5 text-xs font-bold text-white flex items-center space-x-2 shadow-lg select-none">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-          </span>
-          <Compass className="h-4 w-4 animate-spin-slow text-cyan-400" />
-          <span className="tracking-wider uppercase">360° Auto Play View</span>
-        </div>
-
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center text-white">
           <h1 className="text-4xl md:text-6xl font-bold font-playfair mb-6 leading-tight">
             Find Your Dream Property in Bangladesh
@@ -225,7 +215,7 @@ export default function Home() {
             our AI-powered smart search and personalized recommendations.
           </p>
 
-          <div className="max-w-6xl mx-auto bg-slate-950/80 backdrop-blur-2xl rounded-[2rem] p-6 md:p-8 shadow-2xl border border-white/10">
+          <div className="max-w-6xl mx-auto bg-slate-950/80 backdrop-blur-2xl rounded-[2rem] p-6 md:p-8 shadow-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-4 items-end">
               <div>
                 <label className="block text-sm font-medium mb-2 text-white/90">
