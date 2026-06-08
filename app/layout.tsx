@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair",
@@ -33,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfairDisplay.variable} ${inter.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", playfairDisplay.variable, inter.variable, "font-sans", geist.variable)}
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground font-inter w-full">
