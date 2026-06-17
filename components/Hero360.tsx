@@ -41,7 +41,7 @@ const Hero360: React.FC = () => {
       .then(({ Viewer }) => {
         viewerInstance = new Viewer({
           container: containerRef.current!,
-          panorama: "/properties/exterior.jpg",
+          panorama: "/properties/img1.jpeg",
           defaultYaw: 0,
           defaultPitch: 0,
           defaultZoomLvl: 55,

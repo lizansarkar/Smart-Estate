@@ -54,7 +54,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           </Badge>
         </div>
         <div className="absolute top-3 right-3">
-          <Badge variant="secondary" className="bg-white/90 text-foreground">
+          <Badge variant="secondary" className="bg-white/90 text-foreground dark:text-black">
             {property.status === "available" ? "Available" : "Sold"}
           </Badge>
         </div>
@@ -89,7 +89,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
         </p>
 
         {/* Price and Button */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex flex-col">
             <span className="text-xl font-bold text-primary">
               {formatPrice(property.price)}
@@ -100,16 +100,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
               </span>
             )}
           </div>
-          {/* <Button asChild size="sm" className="rounded-lg">
-            <Link href={`/properties/${property._id}`}>
-              Joy bangla
-            </Link>
-          </Button> */}
-
-          <Button variant="outline" asChild className="w-full">
-            <Link href="/login">
-              Login
-            </Link>
+          <Button
+            asChild
+            size="sm"
+            variant="default"
+            className="whitespace-nowrap shadow-md hover:shadow-lg"
+          >
+            <Link href={`/properties/${property._id}`}>View Details</Link>
           </Button>
         </div>
       </div>

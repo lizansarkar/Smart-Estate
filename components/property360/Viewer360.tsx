@@ -1,52 +1,73 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import { ZoomIn, ZoomOut, Maximize2, Minimize2, Link2, RotateCcw, ArrowLeft, Loader2, Plus, X } from 'lucide-react';
-import { SceneData, propertyTours } from '@/data/property-scenes';
-import Hotspot from './Hotspot';
-import ThumbnailNav from './ThumbnailNav';
-import { Button } from '@/components/ui/Button';
-import Link from 'next/link';
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ZoomIn,
+  ZoomOut,
+  Maximize2,
+  Minimize2,
+  Link2,
+  RotateCcw,
+  ArrowLeft,
+  Loader2,
+  Plus,
+  X,
+} from "lucide-react";
+import { SceneData, propertyTours } from "@/data/property-scenes";
+import Hotspot from "./Hotspot";
+import ThumbnailNav from "./ThumbnailNav";
+import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 // Import CSS for photo-sphere-viewer
-import '@photo-sphere-viewer/core/index.css';
+import "@photo-sphere-viewer/core/index.css";
 
 interface Viewer360Props {
   propertyId: string;
+  onSceneChange?: (sceneId: string) => void;
+  currentSceneId?: string;
 }
 
-export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
+export const Viewer360: React.FC<Viewer360Props> = ({
+  propertyId,
+  onSceneChange,
+  currentSceneId,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const outerContainerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<any>(null);
 
   const defaultScenes = propertyTours[propertyId] || [];
-  
+
   const [scenesList, setScenesList] = useState<SceneData[]>([]);
   const [customScenes, setCustomScenes] = useState<SceneData[]>([]);
   const [currentScene, setCurrentScene] = useState<SceneData | null>(null);
-  const [hotspotCoords, setHotspotCoords] = useState<Record<string, { x: number; y: number; visible: boolean }>>({});
-  
+  const [hotspotCoords, setHotspotCoords] = useState<
+    Record<string, { x: number; y: number; visible: boolean }>
+  >({});
+
   const [isLoading, setIsLoading] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-  
+
   // Custom scene form
-  const [customUrl, setCustomUrl] = useState('');
-  const [customTitle, setCustomTitle] = useState('');
-  const [customDesc, setCustomDesc] = useState('');
+  const [customUrl, setCustomUrl] = useState("");
+  const [customTitle, setCustomTitle] = useState("");
+  const [customDesc, setCustomDesc] = useState("");
 
   // 1. Initialize scenes list and restore state on mount
   useEffect(() => {
     // Load custom scenes from localStorage
-    const savedCustomScenesStr = localStorage.getItem(`tour-custom-scenes-${propertyId}`);
+    const savedCustomScenesStr = localStorage.getItem(
+      `tour-custom-scenes-${propertyId}`,
+    );
     let loadedCustomScenes: SceneData[] = [];
     if (savedCustomScenesStr) {
       try {
         loadedCustomScenes = JSON.parse(savedCustomScenesStr);
         setCustomScenes(loadedCustomScenes);
       } catch (e) {
-        console.error('Failed to parse custom scenes', e);
+        console.error("Failed to parse custom scenes", e);
       }
     }
 
@@ -59,15 +80,15 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
     if (savedStateStr) {
       try {
         const savedState = JSON.parse(savedStateStr);
-        const found = fullList.find(s => s.id === savedState.sceneId);
+        const found = fullList.find((s) => s.id === savedState.sceneId);
         if (found) {
           initialScene = found;
         }
       } catch (e) {
-        console.error('Failed to parse tour state', e);
+        console.error("Failed to parse tour state", e);
       }
     }
-    
+
     setCurrentScene(initialScene);
   }, [propertyId]);
 
@@ -83,11 +104,17 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
       sceneId: currentScene.id,
       yaw: currentCam.yaw,
       pitch: currentCam.pitch,
-      zoom: currentZoom
+      zoom: currentZoom,
     };
-    localStorage.setItem(`tour-state-${propertyId}`, JSON.stringify(stateToSave));
+    localStorage.setItem(
+      `tour-state-${propertyId}`,
+      JSON.stringify(stateToSave),
+    );
 
-    const newCoords: Record<string, { x: number; y: number; visible: boolean }> = {};
+    const newCoords: Record<
+      string,
+      { x: number; y: number; visible: boolean }
+    > = {};
 
     currentScene.hotspots.forEach((hotspot) => {
       // Parse percentage strings to numbers
@@ -117,12 +144,15 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
 
       if (isFacingCamera) {
         try {
-          const vector = viewer.dataHelper.sphericalCoordsToVector3({ yaw, pitch });
+          const vector = viewer.dataHelper.sphericalCoordsToVector3({
+            yaw,
+            pitch,
+          });
           const coords = viewer.dataHelper.vector3ToViewerCoords(vector);
           newCoords[hotspot.id] = {
             x: coords.x,
             y: coords.y,
-            visible: true
+            visible: true,
           };
         } catch (err) {
           newCoords[hotspot.id] = { x: 0, y: 0, visible: false };
@@ -143,57 +173,59 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
     setIsLoading(true);
 
     // Dynamically load photo-sphere-viewer/core
-    import('@photo-sphere-viewer/core').then(({ Viewer }) => {
-      // Get saved state to apply default camera coordinates if matching
-      const savedStateStr = localStorage.getItem(`tour-state-${propertyId}`);
-      let defaultYaw = 0;
-      let defaultPitch = 0;
-      let defaultZoom = 50;
+    import("@photo-sphere-viewer/core")
+      .then(({ Viewer }) => {
+        // Get saved state to apply default camera coordinates if matching
+        const savedStateStr = localStorage.getItem(`tour-state-${propertyId}`);
+        let defaultYaw = 0;
+        let defaultPitch = 0;
+        let defaultZoom = 50;
 
-      if (savedStateStr) {
-        try {
-          const savedState = JSON.parse(savedStateStr);
-          if (savedState.sceneId === currentScene.id) {
-            defaultYaw = savedState.yaw ?? 0;
-            defaultPitch = savedState.pitch ?? 0;
-            defaultZoom = savedState.zoom ?? 50;
-          }
-        } catch (e) {}
-      }
+        if (savedStateStr) {
+          try {
+            const savedState = JSON.parse(savedStateStr);
+            if (savedState.sceneId === currentScene.id) {
+              defaultYaw = savedState.yaw ?? 0;
+              defaultPitch = savedState.pitch ?? 0;
+              defaultZoom = savedState.zoom ?? 50;
+            }
+          } catch (e) {}
+        }
 
-      viewerInstance = new Viewer({
-        container: containerRef.current!,
-        panorama: currentScene.image,
-        defaultYaw: defaultYaw,
-        defaultPitch: defaultPitch,
-        defaultZoomLvl: defaultZoom,
-        navbar: false, // Disabled default navbar to use our custom React overlay
-        mousewheel: true,
-        touchmoveTwoFingers: false,
-      });
+        viewerInstance = new Viewer({
+          container: containerRef.current!,
+          panorama: currentScene.image,
+          defaultYaw: defaultYaw,
+          defaultPitch: defaultPitch,
+          defaultZoomLvl: defaultZoom,
+          navbar: false,
+          mousewheel: true,
+          touchmoveTwoFingers: false,
+        });
 
-      viewerRef.current = viewerInstance;
+        viewerRef.current = viewerInstance;
 
-      viewerInstance.addEventListener('ready', () => {
+        viewerInstance.addEventListener("ready", () => {
+          setIsLoading(false);
+          updatePositions(viewerInstance);
+        });
+
+        viewerInstance.addEventListener("position-updated", () => {
+          updatePositions(viewerInstance);
+        });
+
+        viewerInstance.addEventListener("zoom-updated", () => {
+          updatePositions(viewerInstance);
+        });
+
+        viewerInstance.addEventListener("size-updated", () => {
+          updatePositions(viewerInstance);
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to initialize PhotoSphereViewer", err);
         setIsLoading(false);
-        updatePositions(viewerInstance);
       });
-
-      viewerInstance.addEventListener('position-updated', () => {
-        updatePositions(viewerInstance);
-      });
-
-      viewerInstance.addEventListener('zoom-updated', () => {
-        updatePositions(viewerInstance);
-      });
-
-      viewerInstance.addEventListener('size-updated', () => {
-        updatePositions(viewerInstance);
-      });
-    }).catch(err => {
-      console.error('Failed to initialize PhotoSphereViewer', err);
-      setIsLoading(false);
-    });
 
     return () => {
       if (viewerInstance) {
@@ -221,11 +253,14 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
     if (!outerContainerRef.current) return;
 
     if (!document.fullscreenElement) {
-      outerContainerRef.current.requestFullscreen().then(() => {
-        setIsFullscreen(true);
-      }).catch(err => {
-        console.error('Error enabling fullscreen', err);
-      });
+      outerContainerRef.current
+        .requestFullscreen()
+        .then(() => {
+          setIsFullscreen(true);
+        })
+        .catch((err) => {
+          console.error("Error enabling fullscreen", err);
+        });
     } else {
       document.exitFullscreen();
       setIsFullscreen(false);
@@ -237,18 +272,40 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
 
   const handleSceneChange = (sceneId: string) => {
-    const targetScene = scenesList.find(s => s.id === sceneId);
+    const targetScene = scenesList.find((s) => s.id === sceneId);
     if (targetScene) {
       setCurrentScene(targetScene);
+      onSceneChange?.(sceneId);
     }
   };
+
+  // Update scene when currentSceneId prop changes from parent
+  useEffect(() => {
+    if (
+      currentSceneId &&
+      currentSceneId !== currentScene?.id &&
+      scenesList.length > 0
+    ) {
+      const targetScene = scenesList.find((s) => s.id === currentSceneId);
+      if (targetScene) {
+        setCurrentScene(targetScene);
+      }
+    }
+  }, [currentSceneId, scenesList]);
+
+  // Notify parent when current scene changes
+  useEffect(() => {
+    if (currentScene) {
+      onSceneChange?.(currentScene.id);
+    }
+  }, [currentScene?.id, onSceneChange]);
 
   const handleRestartTour = () => {
     if (defaultScenes.length > 0) {
@@ -270,24 +327,27 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
     const newScene: SceneData = {
       id: `custom-${Date.now()}`,
       image: customUrl,
-      title: customTitle || 'Custom Panoramic View',
-      subtitle: 'External 360° Link',
-      description: customDesc || 'Custom uploaded panoramic scene.',
-      hotspots: []
+      title: customTitle || "Custom Panoramic View",
+      subtitle: "External 360° Link",
+      description: customDesc || "Custom uploaded panoramic scene.",
+      hotspots: [],
     };
 
     const newCustomScenes = [...customScenes, newScene];
     setCustomScenes(newCustomScenes);
-    localStorage.setItem(`tour-custom-scenes-${propertyId}`, JSON.stringify(newCustomScenes));
+    localStorage.setItem(
+      `tour-custom-scenes-${propertyId}`,
+      JSON.stringify(newCustomScenes),
+    );
 
     const updatedList = [...defaultScenes, ...newCustomScenes];
     setScenesList(updatedList);
     setCurrentScene(newScene);
 
     // Reset form & close modal
-    setCustomUrl('');
-    setCustomTitle('');
-    setCustomDesc('');
+    setCustomUrl("");
+    setCustomTitle("");
+    setCustomDesc("");
     setIsCustomModalOpen(false);
   };
 
@@ -301,21 +361,24 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
   }
 
   // Find step counter details
-  const defaultSceneIds = defaultScenes.map(s => s.id);
+  const defaultSceneIds = defaultScenes.map((s) => s.id);
   const isDefaultScene = defaultSceneIds.includes(currentScene.id);
-  const currentStepIndex = isDefaultScene ? defaultSceneIds.indexOf(currentScene.id) + 1 : null;
+  const currentStepIndex = isDefaultScene
+    ? defaultSceneIds.indexOf(currentScene.id) + 1
+    : null;
   const totalSteps = defaultSceneIds.length;
 
   return (
-    <div ref={outerContainerRef} className="flex flex-col w-full h-full bg-slate-950 text-slate-100 rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
-      
+    <div
+      ref={outerContainerRef}
+      className="flex flex-col w-full h-full bg-slate-950 text-slate-100 rounded-2xl overflow-hidden shadow-2xl"
+    >
       {/* 360 Viewer Canvas Wrapper */}
-      <div className="relative flex-1 w-full h-[60vh] md:h-[70vh] min-h-[450px] bg-slate-950 overflow-hidden select-none">
-        
+      <div className="relative flex-1 w-full h-[60vh] md:h-[70vh] overflow-hidden select-none">
         {/* The actual photo-sphere-viewer container */}
-        <div 
-          ref={containerRef} 
-          className="w-full h-full cursor-grab active:cursor-grabbing" 
+        <div
+          ref={containerRef}
+          className="w-full h-full cursor-grab active:cursor-grabbing"
         />
 
         {/* Hotspots Overlay Layer */}
@@ -331,7 +394,7 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
                 style={{
                   left: `${coord.x}px`,
                   top: `${coord.y}px`,
-                  transform: 'translate(-50%, -50%)',
+                  transform: "translate(-50%, -50%)",
                 }}
               />
             );
@@ -341,51 +404,12 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
         {/* Loading Spinner */}
         {isLoading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-sm z-30">
-            <Loader2 className="h-10 w-10 animate-spin text-cyan-400 mb-3" />
-            <p className="text-sm font-semibold text-slate-300 tracking-wider">Loading Scene Panorama...</p>
+            <Loader2 className="h-10 w-10 animate-spin mb-3" />
+            <p className="text-sm font-semibold text-slate-300 tracking-wider">
+              Loading Scene Panorama...
+            </p>
           </div>
         )}
-
-        {/* Top Header Overlay */}
-        <div className="absolute top-4 left-4 right-4 flex items-start justify-between z-20 pointer-events-none">
-          {/* Title & Subtitle */}
-          <div className="bg-slate-950/70 backdrop-blur-md border border-slate-800/80 px-4 py-3 rounded-2xl shadow-lg pointer-events-auto max-w-[70%] transition-all duration-300 hover:bg-slate-950/90">
-            <h2 className="text-base font-bold text-white tracking-wide">{currentScene.title}</h2>
-            <p className="text-xs text-slate-300 mt-0.5">{currentScene.subtitle}</p>
-            {currentStepIndex !== null && (
-              <div className="inline-block mt-2 px-2.5 py-0.5 bg-cyan-950/80 border border-cyan-800/60 rounded-full text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
-                Step {currentStepIndex} of {totalSteps}
-              </div>
-            )}
-          </div>
-
-          {/* Action buttons (Back to Details, Restart) */}
-          <div className="flex items-center space-x-2 pointer-events-auto">
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="bg-slate-950/70 backdrop-blur-md border-slate-800/80 text-slate-100 hover:bg-slate-900 rounded-xl"
-            >
-              <Link href={`/properties/${propertyId}`}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Exit Tour
-              </Link>
-            </Button>
-            {isDefaultScene && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRestartTour}
-                className="bg-slate-950/70 backdrop-blur-md border-slate-800/80 text-slate-100 hover:bg-slate-900 rounded-xl"
-                title="Restart Virtual Tour"
-              >
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Restart
-              </Button>
-            )}
-          </div>
-        </div>
 
         {/* Custom React Floating Controls Overlay (Bottom Right) */}
         <div className="absolute bottom-4 right-4 flex flex-col space-y-2 z-20">
@@ -422,10 +446,13 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
             className="flex items-center justify-center w-11 h-11 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-800 text-slate-100 hover:bg-slate-900 hover:text-cyan-400 active:scale-95 transition-all duration-200 shadow-lg cursor-pointer"
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           >
-            {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
+            {isFullscreen ? (
+              <Minimize2 className="h-5 w-5" />
+            ) : (
+              <Maximize2 className="h-5 w-5" />
+            )}
           </button>
         </div>
-
       </div>
 
       {/* Thumbnail Nav controls */}
@@ -451,7 +478,9 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
 
             <div className="flex items-center space-x-2 mb-4">
               <Link2 className="h-5 w-5 text-cyan-400" />
-              <h3 className="text-lg font-bold text-white">Load Custom 360° Image</h3>
+              <h3 className="text-lg font-bold text-white">
+                Load Custom 360° Image
+              </h3>
             </div>
 
             <form onSubmit={handleAddCustomScene} className="space-y-4">
@@ -496,17 +525,18 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
               </div>
 
               <div className="flex space-x-3 pt-2">
-                <Button 
-                  type="submit" 
-                  className="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl h-11"
+                <Button
+                  type="submit"
+                  variant="accent"
+                  className="flex-1 rounded-xl h-11 font-bold"
                 >
                   Load Scene
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => setIsCustomModalOpen(false)}
-                  className="flex-1 border-slate-800 text-slate-300 hover:bg-slate-800 rounded-xl h-11"
+                  className="flex-1 rounded-xl h-11"
                 >
                   Cancel
                 </Button>
@@ -515,7 +545,6 @@ export const Viewer360: React.FC<Viewer360Props> = ({ propertyId }) => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

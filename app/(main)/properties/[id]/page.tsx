@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Property } from '@/types';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { Skeleton } from '@/components/ui/Skeleton';
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { Property } from "@/types";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Skeleton } from "@/components/ui/Skeleton";
 import {
   ArrowLeft,
   Heart,
@@ -31,47 +31,57 @@ import {
   CheckCircle,
   XCircle,
   Compass,
-} from 'lucide-react';
-import toast from 'react-hot-toast';
+} from "lucide-react";
+import toast from "react-hot-toast";
+import Viewer360 from "@/components/property360/Viewer360";
+import { propertyTours } from "@/data/property-scenes";
 
 // Mock data - in a real app, this would come from an API
 const mockProperties: Property[] = [
   {
-    _id: '1',
-    title: 'Modern Downtown Apartment',
-    description: 'Beautiful modern apartment in the heart of downtown with stunning city views. Features hardwood floors, stainless steel appliances, and floor-to-ceiling windows. This spacious 2-bedroom unit offers an open-concept living area perfect for entertaining. The master bedroom includes a walk-in closet and en-suite bathroom. Building amenities include a fitness center, rooftop terrace, and 24/7 concierge service.',
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop',
+    _id: "1",
+    title: "Modern Downtown Apartment",
+    description:
+      "Beautiful modern apartment in the heart of downtown with stunning city views. Features hardwood floors, stainless steel appliances, and floor-to-ceiling windows. This spacious 2-bedroom unit offers an open-concept living area perfect for entertaining. The master bedroom includes a walk-in closet and en-suite bathroom. Building amenities include a fitness center, rooftop terrace, and 24/7 concierge service.",
+    image:
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
     price: 2500,
     rating: 4.8,
-    location: 'Downtown',
-    category: 'apartment',
-    createdBy: 'user1',
-    createdAt: new Date('2024-01-15').toISOString(),    status: 'available',  },
-  {
-    _id: '2',
-    title: 'Luxury Villa with Pool',
-    description: 'Spacious 4-bedroom villa with private pool, garden, and mountain views. Perfect for families looking for luxury living. This stunning property features high-end finishes throughout, including marble countertops, custom cabinetry, and premium appliances. The outdoor space includes a covered patio, built-in BBQ, and lush landscaping.',
-    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop',
-    price: 4500,
-    rating: 4.9,
-    location: 'Mountain View',
-    category: 'villa',
-    createdBy: 'user2',
-    createdAt: new Date('2024-01-20').toISOString(),
-    status: 'available',
+    location: "Downtown",
+    category: "apartment",
+    createdBy: "user1",
+    createdAt: new Date("2024-01-15").toISOString(),
+    status: "available",
   },
   {
-    _id: '3',
-    title: 'Cozy Studio Apartment',
-    description: 'Charming studio apartment perfect for young professionals. Walking distance to shops, restaurants, and public transport. This efficient space maximizes every square foot with custom built-in storage and a Murphy bed. The kitchen features modern appliances and quartz countertops.',
-    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop',
+    _id: "2",
+    title: "Luxury Villa with Pool",
+    description:
+      "Spacious 4-bedroom villa with private pool, garden, and mountain views. Perfect for families looking for luxury living. This stunning property features high-end finishes throughout, including marble countertops, custom cabinetry, and premium appliances. The outdoor space includes a covered patio, built-in BBQ, and lush landscaping.",
+    image:
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop",
+    price: 4500,
+    rating: 4.9,
+    location: "Mountain View",
+    category: "villa",
+    createdBy: "user2",
+    createdAt: new Date("2024-01-20").toISOString(),
+    status: "available",
+  },
+  {
+    _id: "3",
+    title: "Cozy Studio Apartment",
+    description:
+      "Charming studio apartment perfect for young professionals. Walking distance to shops, restaurants, and public transport. This efficient space maximizes every square foot with custom built-in storage and a Murphy bed. The kitchen features modern appliances and quartz countertops.",
+    image:
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
     price: 1200,
     rating: 4.5,
-    location: 'Midtown',
-    category: 'apartment',
-    createdBy: 'user3',
-    createdAt: new Date('2024-01-25').toISOString(),
-    status: 'available',
+    location: "Midtown",
+    category: "apartment",
+    createdBy: "user3",
+    createdAt: new Date("2024-01-25").toISOString(),
+    status: "available",
   },
 ];
 
@@ -82,21 +92,27 @@ const PropertyDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isFavorited, setIsFavorited] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
+  const [currentSceneId, setCurrentSceneId] = useState<string>("");
 
   useEffect(() => {
     const loadProperty = async () => {
       setLoading(true);
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const propertyId = params.id as string;
-      const foundProperty = mockProperties.find(p => p._id === propertyId);
+      const foundProperty = mockProperties.find((p) => p._id === propertyId);
 
       if (foundProperty) {
         setProperty(foundProperty);
+        // Set initial scene
+        const scenes = propertyTours[propertyId];
+        if (scenes && scenes.length > 0) {
+          setCurrentSceneId(scenes[0].id);
+        }
       } else {
-        toast.error('Property not found');
-        router.push('/properties');
+        toast.error("Property not found");
+        router.push("/properties");
       }
 
       setLoading(false);
@@ -109,7 +125,9 @@ const PropertyDetailPage: React.FC = () => {
 
   const handleFavorite = () => {
     setIsFavorited(!isFavorited);
-    toast.success(isFavorited ? 'Removed from favorites' : 'Added to favorites');
+    toast.success(
+      isFavorited ? "Removed from favorites" : "Added to favorites",
+    );
   };
 
   const handleShare = () => {
@@ -121,12 +139,12 @@ const PropertyDetailPage: React.FC = () => {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard');
+      toast.success("Link copied to clipboard");
     }
   };
 
   const handleContact = () => {
-    toast.success('Contact request sent! We\'ll get back to you soon.');
+    toast.success("Contact request sent! We'll get back to you soon.");
     setShowContactForm(false);
   };
 
@@ -161,7 +179,7 @@ const PropertyDetailPage: React.FC = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Property Not Found</h1>
-          <Button onClick={() => router.push('/properties')}>
+          <Button onClick={() => router.push("/properties")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Properties
           </Button>
@@ -190,8 +208,10 @@ const PropertyDetailPage: React.FC = () => {
                 size="sm"
                 onClick={handleFavorite}
               >
-                <Heart className={`h-4 w-4 mr-2 ${isFavorited ? 'fill-current' : ''}`} />
-                {isFavorited ? 'Favorited' : 'Favorite'}
+                <Heart
+                  className={`h-4 w-4 mr-2 ${isFavorited ? "fill-current" : ""}`}
+                />
+                {isFavorited ? "Favorited" : "Favorite"}
               </Button>
             </div>
           </div>
@@ -201,23 +221,61 @@ const PropertyDetailPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2">
-            {/* Property Image */}
-            <div className="mb-6 relative group overflow-hidden rounded-lg shadow-lg">
-              <img
-                src={property.image}
-                alt={property.title}
-                className="w-full h-96 object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-4 left-4">
-                <Button asChild size="sm" className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold shadow-lg border border-cyan-300/30 rounded-xl cursor-pointer">
-                  <Link href={`/properties/${property._id}/tour`}>
-                    <Compass className="h-4 w-4 mr-2 animate-spin-slow text-slate-950" />
-                    360° Virtual Tour
-                  </Link>
-                </Button>
+          <div className="col-span-3 lg:col-span-2">
+            {/* 360° Viewer */}
+            <div className="mb-6 rounded-lg shadow-lg overflow-hidden">
+              <div className="w-full h-[60vh] md:h-[70vh]">
+                <Viewer360
+                  propertyId={property._id}
+                  currentSceneId={currentSceneId}
+                  onSceneChange={setCurrentSceneId}
+                />
               </div>
+
+              {/* Scene Indicator */}
+              {/* {propertyTours[property._id] &&
+                propertyTours[property._id].length > 0 && (
+                  <div className="bg-card p-4 border-t">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <p className="text-sm font-semibold">
+                          {propertyTours[property._id].length} Room
+                          {propertyTours[property._id].length > 1
+                            ? "s"
+                            : ""}{" "}
+                          Available
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 overflow-x-auto pb-1">
+                      {propertyTours[property._id].map((scene, idx) => (
+                        <button
+                          key={scene.id}
+                          onClick={() => setCurrentSceneId(scene.id)}
+                          className="flex-shrink-0 focus:outline-none"
+                          title={scene.title}
+                        >
+                          <div
+                            className={`w-16 h-16 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
+                              currentSceneId === scene.id
+                                ? "border-cyan-500 ring-2 ring-cyan-500/50"
+                                : "border-slate-600 hover:border-cyan-400"
+                            }`}
+                          >
+                            <img
+                              src={scene.image}
+                              alt={`Room ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <p className="text-slate-400 text-xs mt-1 text-center">
+                            {idx + 1}/{propertyTours[property._id].length}
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )} */}
             </div>
 
             {/* Property Info */}
@@ -234,7 +292,10 @@ const PropertyDetailPage: React.FC = () => {
                     </div>
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-1" />
-                      <span>Listed {new Date(property.createdAt).toLocaleDateString()}</span>
+                      <span>
+                        Listed{" "}
+                        {new Date(property.createdAt).toLocaleDateString()}
+                      </span>
                     </div>
                     <div className="flex items-center">
                       <Star className="h-4 w-4 mr-1 fill-yellow-400 text-yellow-400" />
@@ -267,28 +328,36 @@ const PropertyDetailPage: React.FC = () => {
                   <Bed className="h-5 w-5 text-primary" />
                   <div>
                     <div className="font-medium">2 Bedrooms</div>
-                    <div className="text-sm text-muted-foreground">Master + Guest</div>
+                    <div className="text-sm text-muted-foreground">
+                      Master + Guest
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 p-4 bg-muted rounded-lg">
                   <Bath className="h-5 w-5 text-primary" />
                   <div>
                     <div className="font-medium">2 Bathrooms</div>
-                    <div className="text-sm text-muted-foreground">Full baths</div>
+                    <div className="text-sm text-muted-foreground">
+                      Full baths
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 p-4 bg-muted rounded-lg">
                   <Square className="h-5 w-5 text-primary" />
                   <div>
                     <div className="font-medium">1,200 sq ft</div>
-                    <div className="text-sm text-muted-foreground">Living space</div>
+                    <div className="text-sm text-muted-foreground">
+                      Living space
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 p-4 bg-muted rounded-lg">
                   <Car className="h-5 w-5 text-primary" />
                   <div>
                     <div className="font-medium">1 Parking</div>
-                    <div className="text-sm text-muted-foreground">Covered spot</div>
+                    <div className="text-sm text-muted-foreground">
+                      Covered spot
+                    </div>
                   </div>
                 </div>
               </div>
@@ -299,14 +368,17 @@ const PropertyDetailPage: React.FC = () => {
               <h2 className="text-2xl font-semibold mb-4">Amenities</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {[
-                  { icon: Wifi, name: 'High-Speed WiFi' },
-                  { icon: Shield, name: 'Security System' },
-                  { icon: Zap, name: 'Electricity Included' },
-                  { icon: Droplets, name: 'Water Included' },
-                  { icon: Flame, name: 'Heating Included' },
-                  { icon: Car, name: 'Parking Included' },
+                  { icon: Wifi, name: "High-Speed WiFi" },
+                  { icon: Shield, name: "Security System" },
+                  { icon: Zap, name: "Electricity Included" },
+                  { icon: Droplets, name: "Water Included" },
+                  { icon: Flame, name: "Heating Included" },
+                  { icon: Car, name: "Parking Included" },
                 ].map((amenity) => (
-                  <div key={amenity.name} className="flex items-center space-x-2 p-3 bg-muted rounded-lg">
+                  <div
+                    key={amenity.name}
+                    className="flex items-center space-x-2 p-3 bg-muted rounded-lg"
+                  >
                     <CheckCircle className="h-4 w-4 text-green-500" />
                     <span className="text-sm">{amenity.name}</span>
                   </div>
@@ -320,14 +392,10 @@ const PropertyDetailPage: React.FC = () => {
             <div className="sticky top-24">
               {/* Contact Card */}
               <div className="bg-card rounded-lg border p-6 mb-6">
-                <h3 className="text-lg font-semibold mb-4">Interested in this property?</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Interested in this property?
+                </h3>
                 <div className="space-y-3 mb-4">
-                  <Button asChild variant="gradient" className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 border border-cyan-400/20 text-white shadow-md font-bold cursor-pointer" size="lg">
-                    <Link href={`/properties/${property._id}/tour`}>
-                      <Compass className="h-4 w-4 mr-2 animate-spin-slow" />
-                      360° Virtual Tour
-                    </Link>
-                  </Button>
                   <Button
                     className="w-full"
                     size="lg"
@@ -368,14 +436,18 @@ const PropertyDetailPage: React.FC = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Listed</span>
-                    <span className="font-medium">{new Date(property.createdAt).toLocaleDateString()}</span>
+                    <span className="font-medium">
+                      {new Date(property.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Similar Properties */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">Similar Properties</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Similar Properties
+                </h3>
                 <div className="space-y-3">
                   {mockProperties.slice(0, 2).map((similarProperty) => (
                     <Link
@@ -399,7 +471,9 @@ const PropertyDetailPage: React.FC = () => {
                             </span>
                             <div className="flex items-center">
                               <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                              <span className="text-xs">{similarProperty.rating}</span>
+                              <span className="text-xs">
+                                {similarProperty.rating}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -420,7 +494,9 @@ const PropertyDetailPage: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Contact Agent</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Your Message</label>
+                <label className="block text-sm font-medium mb-2">
+                  Your Message
+                </label>
                 <textarea
                   className="w-full p-3 border rounded-lg resize-none"
                   rows={4}
@@ -431,7 +507,10 @@ const PropertyDetailPage: React.FC = () => {
                 <Button onClick={handleContact} className="flex-1">
                   Send Message
                 </Button>
-                <Button variant="outline" onClick={() => setShowContactForm(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowContactForm(false)}
+                >
                   Cancel
                 </Button>
               </div>

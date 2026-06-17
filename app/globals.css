@@ -7,77 +7,109 @@
 /* @source "../app*.{js,ts,jsx,tsx}"; */
 /* @source "../components*.{js,ts,jsx,tsx}"; */
 
-/* ===== LIGHT THEME ===== */
+/* ===== COLOR PALETTE & VARIABLES ===== */
 :root {
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  /* LIGHT MODE - Premium Real Estate Theme (Elegant Navy & Clean Slate) */
+  --background: #fdfdfd; /* Ultra clean white with a touch of warmth */
+  --foreground: #0f172a; /* Deep slate for crisp readability */
+
+  --primary: #0f172a; /* Deep Navy/Slate - represents trust & luxury */
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9; /* Light slate for property cards & sections */
+  --secondary-foreground: #1e293b;
+
+  --accent: #d97706; /* Warm Amber/Bronze - perfect for "Featured", "Price Tags", badges */
+  --accent-foreground: #ffffff;
+
+  --muted: #f8fafc; /* Soft backgrounds for filters or input fields */
+  --muted-foreground: #64748b; /* Muted text for property locations, dates */
+
+  --card: #ffffff; /* Pure white for property listings cards */
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --border: #e2e8f0; /* Subtle borders for clean grid layouts */
+  --input: #f1f5f9;
+  --ring: #d97706; /* Accent focus rings */
+
+  --destructive: #ef4444; /* For delete, alerts, or cancel actions */
   --destructive-foreground: #ffffff;
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  --radius: 0.75rem; /* Slightly rounder corners for a modern, friendly UI */
+
+  /* Navigation & Special components */
+  --navbar-bg: rgba(255, 255, 255, 0.95);
+  --navbar-hover: #f1f5f9;
+
+  /* Sidebar configuration */
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #0f172a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #d97706;
+
+  /* Charts & Analytics (Admin Dashboard) */
+  --chart-1: #0f172a; /* Primary Navy */
+  --chart-2: #d97706; /* Accent Bronze */
+  --chart-3: #2563eb; /* Investment Blue */
+  --chart-4: #10b981; /* Success Green (Sold properties) */
+  --chart-5: #f59e0b;
 }
 
 /* ===== DARK THEME ===== */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: #ffffff;
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* DARK MODE - Luxury Night Theme (Deep Midnight Blue & Gold) */
+  --background: #0b0f19; /* Deep rich midnight background */
+  --foreground: #f8fafc; /* Off-white for comfortable night reading */
+
+  --primary: #f8fafc; /* High contrast white for main headings */
+  --primary-foreground: #0b0f19;
+
+  --secondary: #1e293b; /* Dark slate for cards and containers */
+  --secondary-foreground: #f8fafc;
+
+  --accent: #f59e0b; /* Brighter Gold/Amber for dark mode visibility */
+  --accent-foreground: #0b0f19;
+
+  --muted: #111827;
+  --muted-foreground: #94a3b8;
+
+  --card: #141b2d; /* Elevated card backgrounds */
+  --card-foreground: #f8fafc;
+
+  --popover: #141b2d;
+  --popover-foreground: #f8fafc;
+
+  --border: #222f43;
+  --input: #0b0f19;
+  --ring: #f59e0b;
+
+  --destructive: #f87171;
+  --destructive-foreground: #0b0f19;
+
+  --navbar-bg: rgba(11, 15, 25, 0.95);
+  --navbar-hover: #1e293b;
+
+  --sidebar: #141b2d;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #f8fafc;
+  --sidebar-primary-foreground: #0b0f19;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #222f43;
+  --sidebar-ring: #f59e0b;
+
+  --chart-1: #f8fafc;
+  --chart-2: #f59e0b;
+  --chart-3: #3b82f6;
+  --chart-4: #34d399;
+  --chart-5: #fbbf24;
 }
 
 /* ===== TAILWIND v4 THEME REGISTRATION ===== */
@@ -107,79 +139,40 @@
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 6px);
-
-  --animate-spin-slow: spin 20s linear infinite;
-
-  --font-heading: var(--font-sans);
-
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  --color-sidebar-border: var(--sidebar-border);
-
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-
-  --color-sidebar-accent: var(--sidebar-accent);
-
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-
-  --color-sidebar-primary: var(--sidebar-primary);
-
-  --color-sidebar-foreground: var(--sidebar-foreground);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 
   --color-sidebar: var(--sidebar);
-
-  --color-chart-5: var(--chart-5);
-
-  --color-chart-4: var(--chart-4);
-
-  --color-chart-3: var(--chart-3);
-
-  --color-chart-2: var(--chart-2);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
   --color-chart-1: var(--chart-1);
-
-  --color-popover-foreground: var(--popover-foreground);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 
   --color-popover: var(--popover);
-
-  --radius-2xl: calc(var(--radius) * 1.8);
-
-  --radius-3xl: calc(var(--radius) * 2.2);
-
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-popover-foreground: var(--popover-foreground);
 }
 
-/* ===== BASE STYLES ===== */
-/* * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  border-color: var(--border);
-} */
-
-html {
-  min-height: 100%;
+/* ===== INTERACTIVE ELEMENTS (UX Optimization) ===== */
+button,
+a,
+select,
+input[type="submit"],
+input[type="button"],
+[role="button"] {
+  cursor: pointer; /* Ensure clear visual feedback for all clickable UI elements */
 }
 
-html,
-body {
-  width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100vh;
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* ===== UTILITIES ===== */
+/* ===== UTILITIES (Text Clamping for Property Descriptions) ===== */
 .line-clamp-1 {
   overflow: hidden;
   display: -webkit-box;
@@ -199,7 +192,7 @@ a {
   -webkit-line-clamp: 3;
 }
 
-/* ===== 360 PANORAMA BACKGROUND ANIMATION ===== */
+/* ===== 360 PANORAMA BACKGROUND ANIMATION (Great for Virtual Tours) ===== */
 @keyframes pan-360 {
   0% {
     background-position-x: 0;
@@ -215,6 +208,7 @@ a {
   background-repeat: repeat-x;
 }
 
+/* ===== TAILWIND LAYER BASE STYLES ===== */
 @layer base {
   * {
     @apply border-border outline-ring/50;
