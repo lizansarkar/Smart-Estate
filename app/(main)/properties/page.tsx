@@ -9,87 +9,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Property } from '@/types';
 import { Grid, List, SlidersHorizontal } from 'lucide-react';
 
-// Mock data - in a real app, this would come from an API
-const mockProperties: Property[] = [
-  {
-    _id: '1',
-    title: 'Modern Downtown Apartment',
-    description: 'Beautiful modern apartment in the heart of downtown with stunning city views. Features hardwood floors, stainless steel appliances, and floor-to-ceiling windows.',
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop',
-    price: 2500,
-    rating: 4.8,
-    location: 'Downtown',
-    category: 'apartment',
-    createdBy: 'user1',
-    createdAt: new Date('2024-01-15').toISOString(),
-    status: 'available',
-  },
-  {
-    _id: '2',
-    title: 'Luxury Villa with Pool',
-    description: 'Spacious 4-bedroom villa with private pool, garden, and mountain views. Perfect for families looking for luxury living.',
-    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
-    price: 4500,
-    rating: 4.9,
-    location: 'Mountain View',
-    category: 'villa',
-    createdBy: 'user2',
-    createdAt: new Date('2024-01-20').toISOString(),
-    status: 'available',
-  },
-  {
-    _id: '3',
-    title: 'Cozy Studio Apartment',
-    description: 'Charming studio apartment perfect for young professionals. Walking distance to shops, restaurants, and public transport.',
-    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop',
-    price: 1200,
-    rating: 4.5,
-    location: 'Midtown',
-    category: 'apartment',
-    createdBy: 'user3',
-    createdAt: new Date('2024-01-25').toISOString(),
-    status: 'available',
-  },
-  {
-    _id: '4',
-    title: 'Family Townhouse',
-    description: 'Beautiful 3-story townhouse with 4 bedrooms, 3 bathrooms, and a private garage. Great for growing families.',
-    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop',
-    price: 3200,
-    rating: 4.7,
-    location: 'Suburbia',
-    category: 'house',
-    createdBy: 'user4',
-    createdAt: new Date('2024-01-30').toISOString(),
-    status: 'available',
-  },
-  {
-    _id: '5',
-    title: 'Penthouse Suite',
-    description: 'Exclusive penthouse with panoramic city views, private terrace, and premium finishes. Luxury living at its finest.',
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop',
-    price: 6500,
-    rating: 5.0,
-    location: 'Downtown',
-    category: 'apartment',
-    createdBy: 'user5',
-    createdAt: new Date('2024-02-01').toISOString(),
-    status: 'available',
-  },
-  {
-    _id: '6',
-    title: 'Garden Cottage',
-    description: 'Charming cottage with beautiful garden, perfect for nature lovers. Cozy and peaceful living environment.',
-    image: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=400&h=300&fit=crop',
-    price: 1800,
-    rating: 4.6,
-    location: 'Countryside',
-    category: 'house',
-    createdBy: 'user6',
-    createdAt: new Date('2024-02-05').toISOString(),
-    status: 'available',
-  },
-];
+import api from '@/lib/axios';
 
 const PropertiesPage: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -109,11 +29,19 @@ const PropertiesPage: React.FC = () => {
   useEffect(() => {
     // Simulate API call
     const loadProperties = async () => {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setProperties(mockProperties);
-      setFilteredProperties(mockProperties);
-      setLoading(false);
+      try {
+        setLoading(true);
+        // We fetch up to 50 for the listing page instead of everything
+        const response = await api.get('/properties?limit=50');
+        if (response.data.success) {
+          setProperties(response.data.data);
+          setFilteredProperties(response.data.data);
+        }
+      } catch (error) {
+        console.error('Failed to load properties', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadProperties();

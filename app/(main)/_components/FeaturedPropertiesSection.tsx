@@ -5,82 +5,30 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import PropertyGrid from "@/components/property/PropertyGrid";
 import { Property } from "@/types";
-import React from "react";
-
-const mockProperties: Property[] = [
-  {
-    _id: "1",
-    title: "Luxury Apartment in Gulshan",
-    description:
-      "Modern 3-bedroom apartment with stunning city views, premium finishes, and world-class amenities.",
-    image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop",
-    price: 2500000,
-    rating: 4.8,
-    location: "Gulshan, Dhaka",
-    category: "apartment",
-    createdBy: "admin",
-    createdAt: "2024-01-15T00:00:00Z",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 1800,
-    status: "available",
-  },
-  {
-    _id: "2",
-    title: "Spacious Family House in Dhanmondi",
-    description:
-      "Beautiful detached house perfect for families, with garden, garage, and quiet neighborhood.",
-    image:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop",
-    price: 4500000,
-    rating: 4.6,
-    location: "Dhanmondi, Dhaka",
-    category: "house",
-    createdBy: "admin",
-    createdAt: "2024-01-10T00:00:00Z",
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 2500,
-    status: "available",
-  },
-  {
-    _id: "3",
-    title: "Elegant Villa in Baridhara",
-    description:
-      "Luxurious villa with private pool, modern design, and premium location in exclusive neighborhood.",
-    image:
-      "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=400&h=300&fit=crop",
-    price: 8500000,
-    rating: 4.9,
-    location: "Baridhara, Dhaka",
-    category: "villa",
-    createdBy: "admin",
-    createdAt: "2024-01-12T00:00:00Z",
-    bedrooms: 5,
-    bathrooms: 4,
-    area: 3500,
-    status: "available",
-  },
-  {
-    _id: "4",
-    title: "Commercial Space in Motijheel",
-    description:
-      "Prime commercial property in the heart of the business district, perfect for office or retail.",
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop",
-    price: 12000000,
-    rating: 4.4,
-    location: "Motijheel, Dhaka",
-    category: "commercial",
-    createdBy: "admin",
-    createdAt: "2024-01-08T00:00:00Z",
-    area: 5000,
-    status: "available",
-  },
-];
+import React, { useEffect, useState } from "react";
+import api from "@/lib/axios";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const FeaturedPropertiesSection: React.FC = () => {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await api.get('/properties?limit=4');
+        if (response.data.success) {
+          setProperties(response.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch properties:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProperties();
+  }, []);
+
   return (
     <section className="py-16 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -93,7 +41,25 @@ const FeaturedPropertiesSection: React.FC = () => {
             Bangladesh's most desirable locations.
           </p>
         </div>
-        <PropertyGrid properties={mockProperties} />
+        
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex flex-col space-y-3">
+                <Skeleton className="h-[250px] w-full rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : properties.length > 0 ? (
+          <PropertyGrid properties={properties} />
+        ) : (
+          <p className="text-center text-muted-foreground">No properties found. Please run the seed script.</p>
+        )}
+
         <div className="text-center mt-12">
           <Button
             asChild
@@ -113,3 +79,4 @@ const FeaturedPropertiesSection: React.FC = () => {
 };
 
 export default FeaturedPropertiesSection;
+

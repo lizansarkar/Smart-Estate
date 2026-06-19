@@ -80,10 +80,10 @@ const Navbar: React.FC = () => {
       icon: Building2,
       hasDropdown: true,
     },
-    { name: "Dashboard", href: "/dashboard", icon: User },
     { name: "Favorites", href: "/favorites", icon: Building2 },
     { name: "Blog", href: "/blog", icon: BookOpen },
     { name: "Profile", href: "/dashboard/profile", icon: User },
+    { name: "Dashboard", href: "/dashboard", icon: User },
   ];
 
   const navItems = isAuthenticated ? loggedInNavItems : loggedOutNavItems;

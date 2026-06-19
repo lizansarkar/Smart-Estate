@@ -36,54 +36,7 @@ import toast from "react-hot-toast";
 import Viewer360 from "@/components/property360/Viewer360";
 import { propertyTours } from "@/data/property-scenes";
 
-// Mock data - in a real app, this would come from an API
-const mockProperties: Property[] = [
-  {
-    _id: "1",
-    title: "Modern Downtown Apartment",
-    description:
-      "Beautiful modern apartment in the heart of downtown with stunning city views. Features hardwood floors, stainless steel appliances, and floor-to-ceiling windows. This spacious 2-bedroom unit offers an open-concept living area perfect for entertaining. The master bedroom includes a walk-in closet and en-suite bathroom. Building amenities include a fitness center, rooftop terrace, and 24/7 concierge service.",
-    image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
-    price: 2500,
-    rating: 4.8,
-    location: "Downtown",
-    category: "apartment",
-    createdBy: "user1",
-    createdAt: new Date("2024-01-15").toISOString(),
-    status: "available",
-  },
-  {
-    _id: "2",
-    title: "Luxury Villa with Pool",
-    description:
-      "Spacious 4-bedroom villa with private pool, garden, and mountain views. Perfect for families looking for luxury living. This stunning property features high-end finishes throughout, including marble countertops, custom cabinetry, and premium appliances. The outdoor space includes a covered patio, built-in BBQ, and lush landscaping.",
-    image:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop",
-    price: 4500,
-    rating: 4.9,
-    location: "Mountain View",
-    category: "villa",
-    createdBy: "user2",
-    createdAt: new Date("2024-01-20").toISOString(),
-    status: "available",
-  },
-  {
-    _id: "3",
-    title: "Cozy Studio Apartment",
-    description:
-      "Charming studio apartment perfect for young professionals. Walking distance to shops, restaurants, and public transport. This efficient space maximizes every square foot with custom built-in storage and a Murphy bed. The kitchen features modern appliances and quartz countertops.",
-    image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
-    price: 1200,
-    rating: 4.5,
-    location: "Midtown",
-    category: "apartment",
-    createdBy: "user3",
-    createdAt: new Date("2024-01-25").toISOString(),
-    status: "available",
-  },
-];
+import api from "@/lib/axios";
 
 const PropertyDetailPage: React.FC = () => {
   const params = useParams();
@@ -96,26 +49,28 @@ const PropertyDetailPage: React.FC = () => {
 
   useEffect(() => {
     const loadProperty = async () => {
-      setLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const propertyId = params.id as string;
-      const foundProperty = mockProperties.find((p) => p._id === propertyId);
-
-      if (foundProperty) {
-        setProperty(foundProperty);
-        // Set initial scene
-        const scenes = propertyTours[propertyId];
-        if (scenes && scenes.length > 0) {
-          setCurrentSceneId(scenes[0].id);
+      try {
+        setLoading(true);
+        const propertyId = params.id as string;
+        const response = await api.get(`/properties/${propertyId}`);
+        
+        if (response.data.success) {
+          setProperty(response.data.data);
+          // Set initial scene if exists
+          const scenes = propertyTours[propertyId];
+          if (scenes && scenes.length > 0) {
+            setCurrentSceneId(scenes[0].id);
+          }
+        } else {
+          toast.error("Property not found");
+          router.push("/properties");
         }
-      } else {
-        toast.error("Property not found");
+      } catch (error) {
+        toast.error("Error loading property");
         router.push("/properties");
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     if (params.id) {
@@ -449,37 +404,10 @@ const PropertyDetailPage: React.FC = () => {
                   Similar Properties
                 </h3>
                 <div className="space-y-3">
-                  {mockProperties.slice(0, 2).map((similarProperty) => (
-                    <Link
-                      key={similarProperty._id}
-                      href={`/properties/${similarProperty._id}`}
-                      className="block p-3 bg-muted rounded-lg hover:bg-accent transition-colors"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={similarProperty.image}
-                          alt={similarProperty.title}
-                          className="w-16 h-16 object-cover rounded"
-                        />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm line-clamp-2">
-                            {similarProperty.title}
-                          </h4>
-                          <div className="flex items-center justify-between mt-1">
-                            <span className="text-primary font-medium">
-                              ${similarProperty.price}
-                            </span>
-                            <div className="flex items-center">
-                              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                              <span className="text-xs">
-                                {similarProperty.rating}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                  {/* In a real app, this would fetch from /api/properties?limit=2 */}
+                  <div className="p-3 bg-muted rounded-lg text-center text-sm text-muted-foreground">
+                    Load more similar properties feature coming soon!
+                  </div>
                 </div>
               </div>
             </div>
