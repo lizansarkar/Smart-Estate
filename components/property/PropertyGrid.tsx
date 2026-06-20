@@ -16,7 +16,7 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
         {Array.from({ length: 8 }).map((_, index) => (
           <div key={index} className="h-[380px] w-full rounded-2xl shadow-md bg-background border overflow-hidden">
             <Skeleton className="h-48 w-full" />

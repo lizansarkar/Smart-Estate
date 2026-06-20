@@ -57,7 +57,7 @@ export function Counter({
 
   return (
     <div ref={ref} className="text-center">
-      <div className="text-4xl md:text-5xl font-bold font-playfair mb-2">
+      <div className="text-4xl md:text-5xl font-bold font-playfair mb-2 text-foreground dark:text-white">
         {prefix}
         {count}
         {suffix}

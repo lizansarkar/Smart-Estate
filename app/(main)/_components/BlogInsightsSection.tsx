@@ -60,7 +60,7 @@ const BlogInsightsSection: React.FC = () => {
           {blogPosts.map((post, index) => (
             <article
               key={index}
-              className="bg-background rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-background rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow dark:bg-slate-900 dark:text-white shadow-slate-200 dark:shadow-slate-800"
             >
               <Image
                 src={post.image}

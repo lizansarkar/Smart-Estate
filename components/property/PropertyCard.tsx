@@ -37,9 +37,9 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   };
 
   return (
-    <div className="h-[380px] w-full rounded-2xl shadow-md bg-background overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <div className="h-full w-full flex flex-col rounded-2xl shadow-md bg-background overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Image */}
-      <div className="relative h-48 w-full">
+      <div className="relative h-48 w-full flex-shrink-0">
         <Image
           src={property.image}
           alt={property.title}
@@ -54,14 +54,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           </Badge>
         </div>
         <div className="absolute top-3 right-3">
-          <Badge variant="secondary" className="bg-white/90 text-foreground dark:text-black">
+          <Badge
+            variant="secondary"
+            className="bg-white/90 text-foreground dark:text-black"
+          >
             {property.status === "available" ? "Available" : "Sold"}
           </Badge>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col h-[188px]">
+      <div className="p-4 flex flex-col flex-1 dark:bg-slate-900 dark:text-white shadow-slate-200 dark:shadow-slate-800">
         {/* Title and Rating */}
         <div className="flex items-start justify-between mb-2">
           <h3 className="font-semibold text-lg text-foreground line-clamp-2 leading-tight">
@@ -84,12 +87,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
         </div>
 
         {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow">
+        <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
           {property.description}
         </p>
 
+        {/* Spacer pushes price/button to bottom */}
+        <div className="flex-1" />
+
         {/* Price and Button */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3 pt-2">
           <div className="flex flex-col">
             <span className="text-xl font-bold text-primary">
               {formatPrice(property.price)}

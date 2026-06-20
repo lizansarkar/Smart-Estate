@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design"
+  short_description: "Design polished, usable Next.js interfaces"
+  default_prompt: "Use $frontend-design to improve this app UI with a polished, responsive frontend design."

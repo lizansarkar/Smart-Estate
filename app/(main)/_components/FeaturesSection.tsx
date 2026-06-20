@@ -65,7 +65,7 @@ const FeaturesSection: React.FC = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="text-center p-6 rounded-2xl transition-colors"
+              className="bg-background rounded-2xl p-6 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 dark:bg-slate-900 dark:text-white shadow-slate-200 dark:shadow-slate-800"
             >
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <feature.icon className="h-8 w-8 text-primary" />

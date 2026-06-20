@@ -53,7 +53,7 @@ const PropertyCategoriesSection: React.FC = () => {
             <Link
               key={category.name}
               href={category.href}
-              className="group bg-background rounded-2xl p-6 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              className="group bg-background rounded-2xl p-6 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 dark:bg-slate-900 dark:text-white shadow-slate-200 dark:shadow-slate-800"
             >
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
                 <category.icon className="h-8 w-8 text-primary" />

@@ -33,7 +33,7 @@ const HeroSection: React.FC = () => {
                 <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/70" />
                 <Input
                   placeholder="Enter city, area, or landmark"
-                  className="pl-10 bg-black/30 dark:bg-black/30 border border-white/30 dark:border-white/30 rounded-md placeholder:text-white dark:placeholder:text-white focus:bg-black transition-colors"
+                  className="pl-10 bg-black/30 dark:bg-black/30 border border-white/30 dark:border-white/30 rounded-md placeholder:text-white dark:placeholder:text-white focus:bg-black transition-colors text-white"
                 />
               </div>
             </div>
