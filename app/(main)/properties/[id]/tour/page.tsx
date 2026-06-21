@@ -27,25 +27,11 @@ export default function PropertyTourPage() {
 
         if (response.data.success) {
           setProperty(response.data.data);
-          
-          // Setup 360 tour scenes based on property ID or category
-          // For now, using our property-scenes data map
-          const scenes = propertyTours[propertyId];
-          if (scenes && scenes.length > 0) {
-            setAvailableScenes(scenes);
-            setCurrentSceneId(scenes[0].id);
-          } else {
-            // Fallback to a default scene map if no specific scenes exist
-            // Using ID "1" as a fallback for the demo
-            const fallbackScenes = propertyTours["1"];
-            setAvailableScenes(fallbackScenes);
-            setCurrentSceneId(fallbackScenes[0].id);
-          }
         } else {
           toast.error("Property not found");
           router.push("/properties");
         }
-      } catch (error) {
+      } catch {
         toast.error("Error loading property");
         router.push("/properties");
       } finally {

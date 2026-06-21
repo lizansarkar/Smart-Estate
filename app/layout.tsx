@@ -1,24 +1,9 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Smart Estate - Find Your Dream Property",
@@ -36,7 +21,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", playfairDisplay.variable, inter.variable, "font-sans", geist.variable)}
+      className={cn("h-full", "antialiased", "font-sans")}
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground font-inter w-full">
